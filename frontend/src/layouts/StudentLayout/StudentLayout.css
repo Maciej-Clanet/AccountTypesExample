@@ -1,0 +1,14 @@
+.main-content.student{
+    position: relative;
+    border: 1px solid red;
+}
+.student-options{
+    position:absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 4px 32px;
+    border-radius: 32px;
+    box-shadow: 0px 4px 32px 0px rgba(0,0,0,0.5);
+}

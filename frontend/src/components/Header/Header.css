@@ -1,0 +1,48 @@
+.main-header{
+    z-index: 99;
+    /* background-color: white; */
+    /* border-bottom: 1px solid black; */
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+
+    >p {
+        font-size: 14px;
+        color: black;
+        color: rgb(24, 195, 5);
+        font-weight: 600;
+    }
+
+    > nav {
+        background-color: white;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0px 4px 16px 0px rgba(0,0,0,0.45);
+
+        padding: 4px 32px;
+        border-radius: 32px;
+
+        > a, .logout-btn{
+            padding: 0;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: black;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            text-wrap: nowrap;
+        }
+        >a.active{
+            border-bottom: 2px solid black;
+        }
+
+        >.logout-btn{
+            font-size: 12px;
+        }
+    }
+}

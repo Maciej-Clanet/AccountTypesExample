@@ -1,0 +1,11 @@
+.main-content.teacher{
+    flex-direction: row;
+}
+
+.teacher-nav{
+    border-right: 1px solid lightgray;
+    padding: 16px;
+}
+.teacher-content{
+    padding: 16px;
+}
