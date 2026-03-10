@@ -13,7 +13,8 @@ export default function StudentLayout() {
                 <Outlet/>
 
                 <nav className="student-options">
-                    <NavLink to="enrollments">My Enrollments</NavLink>
+                    <NavLink to="schedule">My Schedule</NavLink>
+                    <NavLink to="homework">Homework</NavLink>
                 </nav>
             </main>
             <Footer/>

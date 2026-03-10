@@ -69,7 +69,8 @@ export default function Routing() {
                 <Route index element={selectDashboard()}/>
 
                 {/* student routes */}
-                <Route path="enrollments" element={studentPage(<div>enrollments</div>)}/>
+                <Route path="homework" element={studentPage(<div>Homework page</div>)}/>
+                <Route path="schedule" element={studentPage(<div>Schedule Page</div>)}/>
             
                 {/* teacher routes */}
             </Route>
