@@ -5,7 +5,6 @@ import { useUser } from "../../contexts/UserContext";
 import "./TeacherLayout.css"
 
 export default function TeacherLayout(){
-    const {user} = useUser()
 
     return(
         <>

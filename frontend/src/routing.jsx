@@ -1,81 +1,101 @@
-import { Routes, Route, Navigate } from "react-router"
-import { useUser } from "./contexts/UserContext"
-import PublicLayout from "./layouts/PublicLayout/PublicLayout"
-import TeacherLayout from "./layouts/TeacherLayout/TeacherLayout"
-import StudentLayout from "./layouts/StudentLayout/StudentLayout"
+import { Routes, Route, Navigate } from "react-router";
+import { useUser } from "./contexts/UserContext";
+import PublicLayout from "./layouts/PublicLayout/PublicLayout";
+import TeacherLayout from "./layouts/TeacherLayout/TeacherLayout";
+import StudentLayout from "./layouts/StudentLayout/StudentLayout";
 
 // pages
-import Home from "./pages/Home/Home"
-import About from "./pages/About/About"
-import Auth from "./pages/Auth/Auth"
-import TeacherDash from "./pages/TeacherDash/TeacherDash"
-import StudentDash from "./pages/StudentDash/StudentDash"
+import Home from "./pages/Home/Home";
+import About from "./pages/About/About";
+import Auth from "./pages/Auth/Auth";
+import TeacherDash from "./pages/TeacherDash/TeacherDash";
+import StudentDash from "./pages/StudentDash/StudentDash";
 
+// Protected route component for role-based access
+function ProtectedRoute({ children, allowedRole }) {
+  const { user } = useUser();
+
+  if (!user) return <Navigate to="/auth" />;
+  if (user.account_type !== allowedRole) return <Navigate to="/myaccount" />;
+
+  return children;
+}
+
+// Select layout based on user role
+function DashboardLayout() {
+  const { user } = useUser();
+
+  if (!user) return <Navigate to="/auth" />;
+
+  return user.account_type === "teacher" ? (
+    <TeacherLayout />
+  ) : (
+    <StudentLayout />
+  );
+}
+
+// Select dashboard page based on user role
+function DashboardPage() {
+  const { user } = useUser();
+
+  if (!user) return <Navigate to="/auth" />;
+
+  return user.account_type === "teacher" ? <TeacherDash /> : <StudentDash />;
+}
 
 export default function Routing() {
-    const { user } = useUser()
+  const { user } = useUser();
 
-    //Selecting which layout to use based on the account type
-    function selectDashLayout(){
-        // If user is not logged in at all, redirect to auth
-        if(!user){
-            return <Navigate to="/auth"/>
-        }
-        if(user.account_type == "teacher"){
-            return <TeacherLayout/>
-        } else {
-            return <StudentLayout/>
-        }
-    }
+  return (
+    <Routes>
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route
+          path="/auth"
+          element={!user ? <Auth /> : <Navigate to="/myaccount" />}
+        />
+      </Route>
 
-    // This will prevent student users from accessing teacher pages
-    function teacherPage(page){
-        if(!user){
-            return <Navigate to="/auth"/>
-        }
-        if(user.account_type != "teacher"){
-            return <Navigate to="/myaccount"/>
-        }
-        return page
-    }
+      <Route path="/myaccount" element={<DashboardLayout />}>
+        <Route index element={<DashboardPage />} />
 
-    //this will prevent teacher users from accessing student pages
-    function studentPage(page){
-        if(!user){
-            return <Navigate to="/auth"/>
-        }
-        if(user.account_type != "student"){
-            return <Navigate to="/myaccount"/>
-        }
-        return page
-    }
+        <Route
+          path="homework"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <div>Homework page</div> {/*Replace div with actual page component */}
+            </ProtectedRoute>
+          }
+        />
 
-    //need to select a dashboard based on the user type as well
-    function selectDashboard(){
-        if(!user){
-            return <Navigate to="/auth"/>
-        }
-        return user.account_type == "teacher" ? <TeacherDash/> : <StudentDash/>
-    }
+        <Route
+          path="schedule"
+          element={
+            <ProtectedRoute allowedRole="student">
+              <div>Schedule Page</div> {/*Replace div with actual page component */}
+            </ProtectedRoute>
+          }
+        />
 
-    return (
-        <Routes>
-            <Route element={<PublicLayout/>}>
-                <Route path="/" element={<Home/>} />
-                <Route path="/about" element={<About/>} />
-                <Route path="/auth" element={!user ? <Auth/> : <Navigate to="/myaccount"/>} />
-            </Route>
-            <Route path={"/myaccount"} element={selectDashLayout()}>
-                <Route index element={selectDashboard()}/>
+        <Route
+          path="mycourses"
+          element={
+            <ProtectedRoute allowedRole="teacher">
+              <div>Courses page</div>
+            </ProtectedRoute>
+          }
+        />
 
-                {/* student routes */}
-                <Route path="homework" element={studentPage(<div>Homework page</div>)}/>
-                <Route path="schedule" element={studentPage(<div>Schedule Page</div>)}/>
-            
-                {/* teacher routes */}
-            </Route>
-
-        </Routes>
-    )
-
+        <Route
+          path="mystudents"
+          element={
+            <ProtectedRoute allowedRole="teacher">
+              <div>Enrolled students page</div>
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+    </Routes>
+  );
 }
